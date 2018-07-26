@@ -18,10 +18,10 @@ VICINITY Adapter for Gorenje appliances
 
 Device status property has only GET method that returns device status. 
 
-**GET method**
+**GET method**  
 After executing GET method we receive following response:
-{
-    " device-status ": "IDLE"
+{  
+    " device-status ": "IDLE"  
 }
 
 #### Light 
