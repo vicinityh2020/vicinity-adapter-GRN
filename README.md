@@ -394,7 +394,7 @@ After executing GET method we receive following response:
 {  
     "duration": 15,  
     "temperature": 200,  
-    "heater-system": "ECOHOTAIR"
+    "heater-system": "ECOHOTAIR"  
 }
 
 **POST method**  
