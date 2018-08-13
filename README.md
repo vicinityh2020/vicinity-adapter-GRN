@@ -331,24 +331,6 @@ After executing PUT method we receive following response:
     "result": "true"  
 }
 
-#### Baking end time hour
-Baking end time hour has only GET method that returns baking end time in hours.
-
-**GET method**  
-After executing GET method we receive following response:  
-{  
-    "baking-end-time-hour": 0  
-}
-
-#### Baking end time minute
-Baking end time minute property has only GET method that returns baking end time in minutes.
-
-**GET method**  
-After executing GET method we receive following response:  
-{  
-    "baking-end-time-minute": 0  
-}
-
 #### Oven actions
 
 #### Delayed baking
