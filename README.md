@@ -21,7 +21,7 @@ Device status property has only GET method that returns device status.
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    " device-status ": "IDLE"  
+    " device_status ": "IDLE"  
 }
 
 #### Light 
@@ -55,17 +55,17 @@ Child lock property has GET method that returns child lock status and PUT method
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "child-lock": "OFF"  
+    "child_lock": "OFF"  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "child-lock": "ON"  
+    "child_lock": "ON"  
 }
 
 **Parameters**
-* child-lock: (string), possible values: ON and OFF.
+* child_lock: (string), possible values: ON and OFF.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -79,7 +79,7 @@ Door property has only GET method that returns door status.
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "door-sensor": "CLOSED"  
+    "door": "CLOSED"  
 }
 
 #### Current temperature
@@ -88,7 +88,7 @@ Current temperature property has only GET method that returns appliance current 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "current-temperature": 120  
+    "current_temperature": 120  
 }
 
 #### Current meat probe temperature
@@ -97,7 +97,7 @@ Current meat probe temperature property has only GET method that returns current
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "current-meat-probe-temperature":  0  
+    "current_meat_probe_temperature":  0  
 }
 
 #### Heater system
@@ -106,17 +106,17 @@ Heater system property has GET method that returns selected heater system and PU
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "heater-system": "ECOHOTAIR"  
+    "heater_system": "ECOHOTAIR"  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "heater-system": "proroasting"  
+    "heater_system": "proroasting"  
 } 
 
 **Parameters**	
-* heater-system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
+* heater_system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -129,7 +129,7 @@ Selected heater min temperature property has only GET method that returns minimu
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "selected-heater-min-temperature": 30  
+    "selected_heater_min_temperature": 30  
 }
 
 #### Selected heater max temperature
@@ -138,7 +138,7 @@ Selected heater max temperature property has only GET method that returns maximu
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "selected-heater-max-temperature": 270  
+    "selected_heater_max_temperature": 270  
 }
 
 #### Selected heater default temperature
@@ -147,7 +147,7 @@ Selected heater default temperature property has only GET method that returns de
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "selected-heater-default-temperature": 180  
+    "selected_heater_default_temperature": 180  
 }
 
 #### Selected heater meat probe allowed
@@ -156,7 +156,7 @@ Selected heater meat probe allowed property has only GET method that returns tru
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "selected-heater-meat-probe-allowed": "true"  
+    "selected_heater_meat_probe_allowed": "true"  
 }
 
 #### Selected heater preheat allowed
@@ -165,7 +165,7 @@ Selected heater preheat allowed property has only GET method that returns true i
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "selected-heater-preheat-allowed": "true"  
+    "selected_heater_preheat_allowed": "true"  
 }
 
 #### Set meat probe temperature
@@ -174,17 +174,17 @@ Set meat probe temperature property has GET method that returns current meat pro
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "set-meat-probe-temperature": 0  
+    "set_meat_probe_temperature": 0  
 } 
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "set-meat-probe-temperature": 50  
+    "set_meat_probe_temperature": 50  
 } 
 
 **Parameters**
-* set-meat-probe-temperature: (integer), possible values: in the range from 30 to 75 Celsius.
+* set_meat_probe_temperature: (integer), possible values: in the range from 30 to 75 Celsius.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -198,17 +198,17 @@ Set baking temperature property has GET method that returns baking temperature i
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "set-baking-temperature": 200  
+    "set_baking_temperature": 200  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "set-baking-temperature": 120  
+    "set_baking_temperature": 120  
 }
 
 **Parameters**
-* set-baking-temperature: (integer), possible values: in the range from 30 to 270 Celsius.
+* set_baking_temperature: (integer), possible values: in the range from 30 to 270 Celsius.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -222,17 +222,17 @@ Set baking time property has GET method that returns baking time in minutes and 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "set-baking-time": 15  
+    "set_baking_time": 15  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "set-baking-time": 35  
+    "set_baking_time": 35  
 }
 
 **Parameters**
-set-baking-time: (integer), possible values: in the range from 1 to 599 minutes.
+set_baking_time: (integer), possible values: in the range from 1 to 599 minutes.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -246,17 +246,17 @@ Alarm time property has GET method that returns alarm time in minutes and PUT me
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "alarm-time": 0  
+    "alarm_time": 0  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "alarm-time": 10  
+    "alarm_time": 10  
 }
 
 **Parameters**
-* alarm-time: (integer), possible values: in the range from 0 to 599 minutes.
+* alarm_time: (integer), possible values: in the range from 0 to 599 minutes.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -270,7 +270,7 @@ Bake elapsed time property has only GET method that returns elapsed time in minu
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "bake-elapsed-time": 4  
+    "bake_elapsed_time": 4  
 }
 
 
@@ -280,7 +280,7 @@ Bake remaining time property has only GET method that returns remaining time in 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "bake-remaining-time": 0  
+    "bake_remaining_time": 0  
 }
 
 ####	Baking start time hour
@@ -289,17 +289,17 @@ Baking start time hour property has GET method that returns baking start time in
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "baking-start-time-hour": 0  
+    "baking_start_time_hour": 0  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "baking-start-time-hour": 9  
+    "baking_start_time_hour": 9  
 }
 
 **Parameters**
-* baking-start-time-hour: (integer), possible values: in the range from 0 to 23 hours.
+* baking_start_time_hour: (integer), possible values: in the range from 0 to 23 hours.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -313,17 +313,17 @@ Baking start time minute property has GET method that returns baking start time 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "baking-start-time-minute": 0  
+    "baking_start_time_minute": 0  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "baking-start-time-minute": 10  
+    "baking_start_time_minute": 10  
 }
 
 **Parameters**
-* baking-start-time-minute: (integer), possible values: in the range from 0 to 59 minutes.
+* baking_start_time_minute: (integer), possible values: in the range from 0 to 59 minutes.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -339,12 +339,12 @@ Delayed baking action has GET method that returns information’s about delayed 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "delayed-baking-status": "IDLE",  
-    "start-baking-at": "0:00",  
+    "delayed_baking": "IDLE",  
+    "start_baking_at": "0:00",  
     "duration": 0,  
     "delay": 0,  
     "temperature": 30,  
-    "heater-system": "hotair"  
+    "heater_system": "hotair"  
 }
 
 **POST method**  
@@ -353,14 +353,14 @@ For POST method request we need to add following JSON:
     "duration": 15,  
     "delay": 1,  
     "temperature": 200,  
-    "heater-system": "ecohotair"  
+    "heater_system": "ecohotair"  
 }
 
 **Parameters**
 * duration: (integer), possible values: in the range from 0 to 599 minutes.
 * delay: (integer), possible values: in the range from 0 to 599 minutes.
 * temperature: (integer), possible values: in the range from 30 to 270 Celsius.
-* heater-system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
+* heater_system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
 
 **Return**  
 After executing POST method we receive following response:  
@@ -376,7 +376,7 @@ After executing GET method we receive following response:
 {  
     "duration": 15,  
     "temperature": 200,  
-    "heater-system": "ECOHOTAIR"  
+    "heater_system": "ECOHOTAIR"  
 }
 
 **POST method**  
@@ -384,13 +384,13 @@ For POST method request we need to add following JSON:
 {  
     "duration": 30,  
     "temperature": 180,  
-    "heater-system": "hotair"  
+    "heater_system": "hotair"  
 }
 
 **Parameters**
 * duration: (integer), possible values: in the range from 0 to 599.
 * temperature: (integer), possible values: in the range from 30 to 270.
-* heater-system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
+* heater_system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
 
 **Return**  
 After executing POST method we receive following response:  
@@ -434,6 +434,12 @@ After executing POST method we receive following response:
     "result": "true"  
 }
 
+#### Oven events
+
+#### Door
+You can subscribe to oven door event to receive notification when door status change. Event ID for oven door is: door.
+
+
 ### Refrigerator
 
 #### Refrigerator properties
@@ -444,7 +450,7 @@ Device status property has only GET method that returns device status.
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "device-status": "NORMAL_MODE"  
+    "device_status": "NORMAL_MODE"  
 }
 
 #### Refrigerator light
@@ -453,7 +459,7 @@ Refrigerator light property has only GET method that returns refrigerator light 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "refrigerator-light": "OFF"  
+    "refrigerator_light": "OFF"  
 }
 
 #### Freezer light
@@ -462,7 +468,7 @@ Freezer light property has only GET method that returns freezer light status.
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "freezer-light": "OFF"  
+    "freezer_light": "OFF"  
 }
 
 #### Refrigerator door
@@ -471,7 +477,7 @@ Refrigerator door property has only GET method that returns refrigerator door st
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "refrigerator-door": "CLOSED"  
+    "refrigerator_door": "CLOSED"  
 } 
 #### Freezer door
 Freezer door property has only GET method that return freezer door status.
@@ -479,7 +485,7 @@ Freezer door property has only GET method that return freezer door status.
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "freezer-door": "CLOSED"  
+    "freezer_door": "CLOSED"  
 }
 
 #### Refrigerator temperature
@@ -488,17 +494,17 @@ Refrigerator temperature property has GET method that returns refrigerator tempe
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "refrigerator-temperature": 5  
+    "refrigerator_temperature": 5  
 } 
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "refrigerator-temperature": 4  
+    "refrigerator_temperature": 4  
 } 
 
 **Parameters**
-* refrigerator-temperature: (integer), possible values: in the range from 3 to 8 Celsius.
+* refrigerator_temperature: (integer), possible values: in the range from 3 to 8 Celsius.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -512,17 +518,17 @@ Freezer temperature property has GET method that returns freezer temperature in 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "freezer-temperature": -22  
+    "freezer_temperature": -22  
 } 
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "freezer-temperature": -18  
+    "freezer_temperature": -18  
 } 
 
 **Parameters**
-* freezer-temperature: (integer), possible values: in the range from -24 to -16 Celsius.
+* freezer_temperature: (integer), possible values: in the range from -24 to -16 Celsius.
 
 **Return**  
 After executing PUT method we receive following response:  
@@ -584,20 +590,28 @@ Childlock property has GET method that returns child lock status and PUT method 
 **GET method**  
 After executing GET method we receive following response:  
 {  
-    "child-lock": "ON"  
+    "child_lock": "ON"  
 }
 
 **PUT method**  
 For PUT method request we need to add following JSON:  
 {  
-    "child-lock": "OFF"  
+    "child_lock": "OFF"  
 }
 
 **Parameters**
-* child-lock: (string), possible values: ON and OFF.
+* child_lock: (string), possible values: ON and OFF.
 
 **Return**  
 After executing PUT method we receive following response:  
 {  
     "result": "true"  
 }
+
+#### Refrigerator events
+
+#### Refrigerator door
+You can subscribe to refrigerator door event to receive notification when door status change. Event ID for refrigerator door is: refrigerator_door.
+
+#### Freezer door
+You can subscribe to freezer door event to receive notification when door status change. Event ID for freezer door is: freezer_door.
