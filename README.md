@@ -437,10 +437,10 @@ After executing POST method we receive following response:
 #### Oven events
 
 #### Door
-You can subscribe to oven door event to receive notification when door status change. Event ID for oven door is: door. For example subscriber receive following JSON:
-{
-    "door": "OPENED",
-    "Timestamp": "26. 10. 2018 10:13:14"
+You can subscribe to oven door event to receive notification when door status change. Event ID for oven door is: door. For example subscriber receive following JSON:  
+{  
+    "door": "OPENED",  
+    "Timestamp": "26. 10. 2018 10:13:14"  
 }
 
 
@@ -615,16 +615,16 @@ After executing PUT method we receive following response:
 #### Refrigerator events
 
 #### Refrigerator door
-You can subscribe to refrigerator door event to receive notification when door status change. Event ID for refrigerator door is: refrigerator_door. For example subscriber receive following JSON:
-{
-    "refrigerator_door": "OPENED",
-    "Timestamp": "26. 10. 2018 10:13:14"
+You can subscribe to refrigerator door event to receive notification when door status change. Event ID for refrigerator door is: refrigerator_door. For example subscriber receive following JSON:  
+{  
+    "refrigerator_door": "OPENED",  
+    "Timestamp": "26. 10. 2018 10:13:14"  
 }
 
 
 #### Freezer door
-You can subscribe to freezer door event to receive notification when door status change. Event ID for freezer door is: freezer_door. For example subscriber receive following JSON:
-{
-    "freezer_door": "CLOSED",
-    "Timestamp": "26. 10. 2018 10:09:11"
+You can subscribe to freezer door event to receive notification when door status change. Event ID for freezer door is: freezer_door. For example subscriber receive following JSON:  
+{  
+    "freezer_door": "CLOSED",  
+    "Timestamp": "26. 10. 2018 10:09:11"  
 }
