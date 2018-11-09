@@ -16,7 +16,8 @@ VICINITY Adapter for Gorenje appliances
 
 #### Device status
 
-Device status property has only GET method that returns device status. 
+PID: device_status  
+Device status property has only GET method that returns device status.
 
 **GET method**  
 After executing GET method we receive following response:  
@@ -26,6 +27,7 @@ After executing GET method we receive following response:
 
 #### Light 
 
+PID: light  
 Light property has GET method that returns light status and PUT method that change light status.
 
 **GET method**  
@@ -50,6 +52,8 @@ After executing PUT method we receive following response:
 }
 
 #### Child lock
+
+PID: child_lock  
 Child lock property has GET method that returns child lock status and PUT method that change child lock status.
 
 **GET method**  
@@ -74,6 +78,8 @@ After executing PUT method we receive following response:
 }
 
 #### Door
+
+PID: door  
 Door property has only GET method that returns door status.
 
 **GET method**  
@@ -83,6 +89,8 @@ After executing GET method we receive following response:
 }
 
 #### Current temperature
+
+PID: current_temperature  
 Current temperature property has only GET method that returns appliance current temperature in Celsius.
 
 **GET method**  
@@ -92,6 +100,8 @@ After executing GET method we receive following response:
 }
 
 #### Current meat probe temperature
+
+PID: current_meat_probe_temperature  
 Current meat probe temperature property has only GET method that returns current meat probe temperature in Celsius. If there is no meat the result will be 0 Celsius otherwise it will be 30 Celsius or more.
 
 **GET method**  
@@ -101,6 +111,8 @@ After executing GET method we receive following response:
 }
 
 #### Heater system
+
+PID: heater_system  
 Heater system property has GET method that returns selected heater system and PUT method that change heater system.
 
 **GET method**  
@@ -124,6 +136,8 @@ After executing PUT method we receive following response:
     "result": "true"  
 }
 #### Selected heater min temperature
+
+PID: selected_heater_min_temperature  
 Selected heater min temperature property has only GET method that returns minimum temperature in Celsius for selected heater.
 
 **GET method**  
@@ -133,6 +147,8 @@ After executing GET method we receive following response:
 }
 
 #### Selected heater max temperature
+
+PID: selected_heater_max_temperature  
 Selected heater max temperature property has only GET method that returns maximum temperature in Celsius for selected heater.
 
 **GET method**  
@@ -142,6 +158,8 @@ After executing GET method we receive following response:
 }
 
 #### Selected heater default temperature
+
+PID: selected_heater_default_temperature  
 Selected heater default temperature property has only GET method that returns default temperature in Celsius for selected heater.
 
 **GET method**  
@@ -151,6 +169,8 @@ After executing GET method we receive following response:
 }
 
 #### Selected heater meat probe allowed
+
+PID: selected_heater_meat_probe_allowed  
 Selected heater meat probe allowed property has only GET method that returns true if meat probe is allowed for selected heater or false if it isn’t.
 
 **GET method**  
@@ -160,6 +180,8 @@ After executing GET method we receive following response:
 }
 
 #### Selected heater preheat allowed
+
+PID: selected_heater_preheat_allowed  
 Selected heater preheat allowed property has only GET method that returns true if preheat is allowed for selected heater or false if it isn’t.
 
 **GET method**  
@@ -169,6 +191,8 @@ After executing GET method we receive following response:
 }
 
 #### Set meat probe temperature
+
+PID: set_meat_probe_temperature  
 Set meat probe temperature property has GET method that returns current meat probe temperature in Celsius (if there is no meat the result will be 0 Celsius otherwise it will be 30 Celsius or more) and PUT method that set meat probe temperature.
 
 **GET method**  
@@ -193,6 +217,8 @@ After executing PUT method we receive following response:
 }
 
 #### Set baking temperature
+
+PID: set_baking_temperature  
 Set baking temperature property has GET method that returns baking temperature in Celsius and PUT method that set baking temperature.
 
 **GET method**  
@@ -217,6 +243,8 @@ After executing PUT method we receive following response:
 }
 
 #### Set baking time
+
+PID: set_baking_time  
 Set baking time property has GET method that returns baking time in minutes and PUT method that set baking time.
 
 **GET method**  
@@ -241,6 +269,8 @@ After executing PUT method we receive following response:
 }
 
 #### Alarm time
+
+PID: alarm_time  
 Alarm time property has GET method that returns alarm time in minutes and PUT method that set alarm time.
 
 **GET method**  
@@ -265,6 +295,8 @@ After executing PUT method we receive following response:
 }
 
 #### Bake elapsed time
+
+PID: bake_elapsed_time  
 Bake elapsed time property has only GET method that returns elapsed time in minutes.
 
 **GET method**  
@@ -275,6 +307,8 @@ After executing GET method we receive following response:
 
 
 #### Bake remaining time
+
+PID: bake_remaining_time  
 Bake remaining time property has only GET method that returns remaining time in minutes.
 
 **GET method**  
@@ -284,6 +318,8 @@ After executing GET method we receive following response:
 }
 
 ####	Baking start time hour
+
+PID: baking_start_time_hour  
 Baking start time hour property has GET method that returns baking start time in hours and PUT method that set baking start time.
 
 **GET method**  
@@ -308,6 +344,8 @@ After executing PUT method we receive following response:
 }
 
 #### Baking start time minute 
+
+PID: baking_start_time_minute  
 Baking start time minute property has GET method that returns baking start time in minutes and PUT method that set baking start time.
 
 **GET method**  
@@ -334,6 +372,8 @@ After executing PUT method we receive following response:
 #### Oven actions
 
 #### Delayed baking
+
+AID: delayed_baking  
 Delayed baking action has GET method that returns information’s about delayed baking (if delay baking status is IDLE or RUNNING it will return default values for other parameters otherwise it will return set values) and POST method that set delayed baking.
 
 **GET method**  
@@ -369,6 +409,8 @@ After executing POST method we receive following response:
 }
 
 #### Baking
+
+AID: baking  
 Baking action has GET method that returns information’s about baking (duration in minutes, temperature in Celsius and selected heater system) and POST method that set baking.
 
 **GET method**  
@@ -399,6 +441,8 @@ After executing POST method we receive following response:
 }
 
 #### Start
+
+AID: start  
 Start action has only POST method that starts baking.
 
 **POST method**  
@@ -417,6 +461,8 @@ After executing POST method we receive following response:
 }
 
 #### Stop
+
+AID: stop  
 Stop action has only POST method that stops baking.
 
 **POST method**  
@@ -436,11 +482,26 @@ After executing POST method we receive following response:
 
 #### Oven events
 
+#### Device status
+You can subscribe to oven device status event to receive notification when device status change. Event ID for oven device status is: device_status. For example subscriber receive following JSON:  
+{  
+	"Name": "Smart oven 3",  
+	"AUID": 0000000000001321320001201800000000011,  
+    "device_status": "RUNNING",  
+    "Timestamp": "26. 10. 2018 10:13:14"  
+}  
+  
+Properties explanation:  
+Name: Unique name in NM  
+AUID: Unique appliance identifier number (37 digits)  
+device_status: possible values: "IDLE", "RUNNING"(baking in progress), "PAUSE"(baking is paused), "AFTER_BAKE"(baking has ended), "DELAY_TIME_WAITING"(delayed baking mode)  
+Timestamp: UTC value when event happened 
+
 #### Door
 You can subscribe to oven door event to receive notification when door status change. Event ID for oven door is: door. For example subscriber receive following JSON:  
 {  
-	"Name":"Smart oven 1",  
-	"AUID":"0000000000001321320001201800000000012",  
+	"Name": "Smart oven 1",  
+	"AUID": 0000000000001321320001201800000000012,  
     "door": "OPENED",  
     "Timestamp": "26. 10. 2018 10:13:14"  
 }  
@@ -448,7 +509,7 @@ You can subscribe to oven door event to receive notification when door status ch
 Properties explanation:  
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
-door: event id  
+door: door status, possible values: "OPENED" or "CLOSED"  
 Timestamp: UTC value when event happened  
 
 
@@ -458,6 +519,8 @@ Timestamp: UTC value when event happened
 #### Refrigerator properties
 
 #### Device status
+
+PID: device_status  
 Device status property has only GET method that returns device status.
 
 **GET method**  
@@ -467,6 +530,8 @@ After executing GET method we receive following response:
 }
 
 #### Refrigerator light
+
+PID: refrigerator_light  
 Refrigerator light property has only GET method that returns refrigerator light status.
 
 **GET method**  
@@ -476,6 +541,8 @@ After executing GET method we receive following response:
 }
 
 #### Freezer light
+
+PID: freezer_light  
 Freezer light property has only GET method that returns freezer light status.
 
 **GET method**  
@@ -485,6 +552,8 @@ After executing GET method we receive following response:
 }
 
 #### Refrigerator door
+
+PID: refrigerator_door  
 Refrigerator door property has only GET method that returns refrigerator door status.
 
 **GET method**  
@@ -493,6 +562,8 @@ After executing GET method we receive following response:
     "refrigerator_door": "CLOSED"  
 } 
 #### Freezer door
+
+PID: freezer_door  
 Freezer door property has only GET method that return freezer door status.
 
 **GET method**  
@@ -502,6 +573,8 @@ After executing GET method we receive following response:
 }
 
 #### Refrigerator temperature
+
+PID: refrigerator_temperature  
 Refrigerator temperature property has GET method that returns refrigerator temperature in Celsius and PUT method that change refrigerator temperature.
 
 **GET method**  
@@ -526,6 +599,8 @@ After executing PUT method we receive following response:
 }
 
 #### Freezer temperature
+
+PID: freezer_temperature  
 Freezer temperature property has GET method that returns freezer temperature in Celsius and PUT method that change freezer temperature.
 
 **GET method**  
@@ -550,6 +625,8 @@ After executing PUT method we receive following response:
 }
 
 #### Fastfreeze
+
+PID: fastfreeze  
 Fastfreeze property has GET method that returns fastfreeze status and PUT method that turns on or off fastfreeze.
 
 **GET method**  
@@ -574,6 +651,8 @@ After executing PUT method we receive following response:
 }
 
 #### Supercool
+
+PID: supercool  
 Supercool property has GET that returns supercool status and PUT method that turns on or off supercool.
 
 **GET method**  
@@ -598,6 +677,8 @@ After executing PUT method we receive following response:
 }
 
 #### Childlock
+
+PID: child_lock  
 Childlock property has GET method that returns child lock status and PUT method that change child lock status.
 
 **GET method**  
@@ -626,8 +707,8 @@ After executing PUT method we receive following response:
 #### Refrigerator door
 You can subscribe to refrigerator door event to receive notification when door status change. Event ID for refrigerator door is: refrigerator_door. For example subscriber receive following JSON:  
 {  
-	"Name":"Smart refrigerator 1",  
-	"AUID":"0000000000001321320001201800000000013",  
+	"Name": "Smart refrigerator 1",  
+	"AUID": 0000000000001321320001201800000000013,  
     "refrigerator_door": "OPENED",  
     "Timestamp": "26. 10. 2018 10:13:14"  
 }  
@@ -635,15 +716,15 @@ You can subscribe to refrigerator door event to receive notification when door s
 Properties explanation:  
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
-refrigerator_door: event id  
+refrigerator_door: refrigerator door status, possible values: "OPENED" or "CLOSED"  
 Timestamp: UTC value when event happened  
 
 
 #### Freezer door
 You can subscribe to freezer door event to receive notification when door status change. Event ID for freezer door is: freezer_door. For example subscriber receive following JSON:  
 {  
-	"Name":"Smart refrigerator 2",  
-	"AUID":"0000000000001321320001201800000000014",  
+	"Name": "Smart refrigerator 2",  
+	"AUID": 0000000000001321320001201800000000014,  
     "freezer_door": "CLOSED",  
     "Timestamp": "26. 10. 2018 10:09:11"  
 }  
@@ -651,5 +732,5 @@ You can subscribe to freezer door event to receive notification when door status
 Properties explanation:  
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
-freezer_door: event id  
+freezer_door: freezer door status, possible values: "OPENED" or "CLOSED"  
 Timestamp: UTC value when event happened  
