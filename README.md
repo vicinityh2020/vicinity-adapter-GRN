@@ -486,7 +486,7 @@ After executing POST method we receive following response:
 You can subscribe to oven device status event to receive notification when device status change. Event ID for oven device status is: device_status. For example subscriber receive following JSON:  
 {  
 	"Name": "Smart oven 3",  
-	"AUID": 0000000000001321320001201800000000011,  
+	"AUID": "0000000000001321320001201800000000011",  
     "device_status": "RUNNING",  
     "Timestamp": "26. 10. 2018 10:13:14"  
 }  
@@ -501,7 +501,7 @@ Timestamp: UTC value when event happened
 You can subscribe to oven door event to receive notification when door status change. Event ID for oven door is: door. For example subscriber receive following JSON:  
 {  
 	"Name": "Smart oven 1",  
-	"AUID": 0000000000001321320001201800000000012,  
+	"AUID": "0000000000001321320001201800000000012",  
     "door": "OPENED",  
     "Timestamp": "26. 10. 2018 10:13:14"  
 }  
@@ -708,7 +708,7 @@ After executing PUT method we receive following response:
 You can subscribe to refrigerator door event to receive notification when door status change. Event ID for refrigerator door is: refrigerator_door. For example subscriber receive following JSON:  
 {  
 	"Name": "Smart refrigerator 1",  
-	"AUID": 0000000000001321320001201800000000013,  
+	"AUID": "0000000000001321320001201800000000013",  
     "refrigerator_door": "OPENED",  
     "Timestamp": "26. 10. 2018 10:13:14"  
 }  
@@ -724,7 +724,7 @@ Timestamp: UTC value when event happened
 You can subscribe to freezer door event to receive notification when door status change. Event ID for freezer door is: freezer_door. For example subscriber receive following JSON:  
 {  
 	"Name": "Smart refrigerator 2",  
-	"AUID": 0000000000001321320001201800000000014,  
+	"AUID": "0000000000001321320001201800000000014",  
     "freezer_door": "CLOSED",  
     "Timestamp": "26. 10. 2018 10:09:11"  
 }  
