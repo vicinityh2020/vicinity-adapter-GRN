@@ -374,7 +374,7 @@ After executing PUT method we receive following response:
 #### Delayed baking
 
 AID: delayed_baking  
-Delayed baking action has GET method that returns information’s about delayed baking (if delay baking status is IDLE or RUNNING it will return default values for other parameters otherwise it will return set values) and POST method that set delayed baking.
+Delayed baking action has GET method that returns information’s about delayed baking (if delay baking status is IDLE or RUNNING it will return default values for other parameters otherwise it will return set values) and POST method that set delayed baking parameters and automatically starts baking.
 
 **GET method**  
 After executing GET method we receive following response:  
@@ -411,7 +411,7 @@ After executing POST method we receive following response:
 #### Baking
 
 AID: baking  
-Baking action has GET method that returns information’s about baking (duration in minutes, temperature in Celsius and selected heater system) and POST method that set baking.
+Baking action has GET method that returns information’s about baking (duration in minutes, temperature in Celsius and selected heater system) and POST method that set baking parameters and automatically starts baking.
 
 **GET method**  
 After executing GET method we receive following response:  
@@ -433,26 +433,6 @@ For POST method request we need to add following JSON:
 * duration: (integer), possible values: in the range from 0 to 599.
 * temperature: (integer), possible values: in the range from 30 to 270.
 * heater_system: (string), possible values: hotair, ecohotair, topbottom, hotairbottom, bottomfan, bottom, top, smallgrill, largegrill, largegrillfan and proroasting.
-
-**Return**  
-After executing POST method we receive following response:  
-{  
-    "result": "true"  
-}
-
-#### Start
-
-AID: start  
-Start action has only POST method that starts baking.
-
-**POST method**  
-For POST method request we need to add following JSON:  
-{  
-    "id": 1  
-}
-
-**Parameters**
-* id: (integer), possible values: any integer number
 
 **Return**  
 After executing POST method we receive following response:  
@@ -510,6 +490,21 @@ Properties explanation:
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
 door: door status, possible values: "OPENED" or "CLOSED"  
+Timestamp: UTC value when event happened  
+
+#### Oven emergency
+You can subscribe to oven emergency event to receive notification when the oven has food left in it for 15 (Level 3), 25 (Level 2) or 30 (Level 1) minutes after the preparations are completed. Event ID for oven emergency is: oven_emergency. For example subscriber receive following JSON:  
+{  
+	"Name": "Smart oven 2",  
+	"AUID": "0000000000001321320001201800000000017",  
+    "Emergency Level": "2",  
+    "Timestamp": "28. 10. 2018 10:13:14"  
+}  
+  
+Properties explanation:  
+Name: Unique name in NM  
+AUID: Unique appliance identifier number (37 digits)  
+Emergency Level: possible values: "1" (30 minutes), "2" (25 minutes) or "3" (15 minutes)  
 Timestamp: UTC value when event happened  
 
 
@@ -733,4 +728,20 @@ Properties explanation:
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
 freezer_door: freezer door status, possible values: "OPENED" or "CLOSED"  
+Timestamp: UTC value when event happened  
+
+
+#### Refrigerator emergency
+You can subscribe to refrigerator emergency event to receive notification when the refrigerator door has been left open for 3 (Level 3), 5 (Level 2) or 10 (Level 1)  minutes. Event ID for refrigerator emergency is: refrigerator_emergency. For example subscriber receive following JSON:  
+{  
+	"Name": "Smart refrigerator 2",  
+	"AUID": "0000000000001321320001201800000000018",  
+    "Emergency Level": "1",  
+    "Timestamp": "28. 10. 2018 10:09:11"  
+}  
+  
+Properties explanation:  
+Name: Unique name in NM  
+AUID: Unique appliance identifier number (37 digits)  
+Emergency Level: possible values: "1" (10 minutes), "2" (5 minutes) or "3" (3 minutes)  
 Timestamp: UTC value when event happened  
