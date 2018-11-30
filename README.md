@@ -497,14 +497,14 @@ You can subscribe to oven emergency event to receive notification when the oven 
 {  
 	"Name": "Smart oven 2",  
 	"AUID": "0000000000001321320001201800000000017",  
-    "Emergency Level": "2",  
+    "oven_emergency": "2",  
     "Timestamp": "28. 10. 2018 10:13:14"  
 }  
   
 Properties explanation:  
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
-Emergency Level: possible values: "1" (30 minutes), "2" (25 minutes) or "3" (15 minutes)  
+oven_emergency: possible values: "1" (30 minutes), "2" (25 minutes) or "3" (15 minutes)  
 Timestamp: UTC value when event happened  
 
 
@@ -736,12 +736,12 @@ You can subscribe to refrigerator emergency event to receive notification when t
 {  
 	"Name": "Smart refrigerator 2",  
 	"AUID": "0000000000001321320001201800000000018",  
-    "Emergency Level": "1",  
+    "refrigerator_emergency": "1",  
     "Timestamp": "28. 10. 2018 10:09:11"  
 }  
   
 Properties explanation:  
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
-Emergency Level: possible values: "1" (10 minutes), "2" (5 minutes) or "3" (3 minutes)  
+refrigerator_emergency: possible values: "1" (10 minutes), "2" (5 minutes) or "3" (3 minutes)  
 Timestamp: UTC value when event happened  
