@@ -1,0 +1,47 @@
+﻿Installing assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Installing service VicinityCLP.Service...
+Service VicinityCLP.Service has been successfully installed.
+Creating EventLog source VicinityCLP.Service in log Application...
+Committing assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Uninstalling assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Removing EventLog source VicinityCLP.Service.
+Service VicinityCLP.Service is being removed from the system...
+Service VicinityCLP.Service was successfully removed from the system.
+Installing assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Installing service VicinityCLP.Service...
+Creating EventLog source VicinityCLP.Service in log Application...
+Rolling back assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Restoring event log to previous state for source VicinityCLP.Service.
+Installing assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
+Installing service VicinityCLP.Service...
+Service VicinityCLP.Service has been successfully installed.
+Creating EventLog source VicinityCLP.Service in log Application...
+Committing assembly 'C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.exe
+   logfile = C:\Users\nikolaj.colic\Desktop\Projects\nikolaj.colic\Vicinity\VicinityCLP.Service\bin\Debug\VicinityCLP.Service.InstallLog
