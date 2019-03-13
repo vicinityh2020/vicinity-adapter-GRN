@@ -11,34 +11,9 @@ namespace VicinityCLP
 {
     public class ApplianceMethods
     {
-
-        private bool ArePropertiesSet(CLP_Connection clp_connection, string clp_user, string clp_token, string clp_auid, Dictionary<string, string> props)
-        {
-            string json_response = clp_connection.GetCLPObject(clp_user, clp_token, clp_auid);
-
-            CLP_Parameters clp_parameters = new CLP_Parameters();
-            clp_parameters.Parse(json_response);
-            Dictionary<string, string> dict = clp_parameters.GetParams(clp_auid);
-
-
-            foreach (KeyValuePair<string, string> item in props)
-            {
-                if (!dict.ContainsKey(item.Key))
-                {
-                    return false;
-                }
-
-                if (!dict[item.Key].ToUpper().Equals(item.Value.ToUpper()))
-                {
-                    return false;
-                }
-            }
-
-
-            return true;
-        }
-
         #region Methods
+
+        #region Public
 
         #region Oven
 
@@ -1022,6 +997,40 @@ namespace VicinityCLP
 
                 ArePropertiesSet(clp_connection, clp_user, clp_token, clp_auid, props);
             }
+        }
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region Private
+
+        #region ArePropertiesSet
+        private bool ArePropertiesSet(CLP_Connection clp_connection, string clp_user, string clp_token, string clp_auid, Dictionary<string, string> props)
+        {
+            string json_response = clp_connection.GetCLPObject(clp_user, clp_token, clp_auid);
+
+            CLP_Parameters clp_parameters = new CLP_Parameters();
+            clp_parameters.Parse(json_response);
+            Dictionary<string, string> dict = clp_parameters.GetParams(clp_auid);
+
+
+            foreach (KeyValuePair<string, string> item in props)
+            {
+                if (!dict.ContainsKey(item.Key))
+                {
+                    return false;
+                }
+
+                if (!dict[item.Key].ToUpper().Equals(item.Value.ToUpper()))
+                {
+                    return false;
+                }
+            }
+
+
+            return true;
         }
         #endregion
 

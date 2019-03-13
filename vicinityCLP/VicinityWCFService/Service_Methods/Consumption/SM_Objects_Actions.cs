@@ -11,7 +11,6 @@ namespace VicinityWCF
     public partial class VicinityWCFService : IVicinityWCFService
     {
         #region GET method
-
         public Stream SM_Objects_Actions_GET(string object_id, string action_id)
         {
             ApplianceResponse app_response = ApplianceResponse.CreateInstance(object_id, OnRequestReceived);
@@ -40,12 +39,10 @@ namespace VicinityWCF
 
             return null;
         }
-
         #endregion
 
 
-        #region POST method        
-
+        #region POST method    
         public Stream SM_Objects_Actions_POST(string object_id, string action_id)
         {
             ApplianceResponse app_response = ApplianceResponse.CreateInstance(object_id, OnRequestReceived);
@@ -176,7 +173,6 @@ namespace VicinityWCF
             return null;
 
         }
-
         #endregion
     }
 }

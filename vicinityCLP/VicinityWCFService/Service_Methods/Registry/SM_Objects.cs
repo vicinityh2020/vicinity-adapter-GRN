@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -9,154 +10,13 @@ namespace VicinityWCF
 {
     public partial class VicinityWCFService : IVicinityWCFService
     {
+        #region Methods
+
+        #region Public
+
+        #region SM_Objects_GET
         public Stream SM_Objects_GET()
         {
-            #region Comment
-            //            string response = @"[
-            //  {
-            //    ""type"": ""SmartOven"",
-            //    ""oid"": ""smart_oven_cerknica_0"",
-            //    ""properties"": [
-            //      {
-            //        ""pid"": ""device_status"",
-            //        ""monitors"": ""device_status"",
-            //        ""output"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        },
-            //        ""writable"": false,
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ]
-            //      },
-            //      {
-            //        ""pid"": ""light"",
-            //        ""monitors"": ""light"",
-            //        ""output"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        },
-            //        ""writable"": false,
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ]
-            //      }
-            //    ],
-            //    ""actions"": [      
-            //      {
-            //        ""aid"": ""delayed_baking"",
-            //        ""affects"": ""delayed_baking_status"",
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/actions/{aid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/actions/{aid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""input"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        }
-            //      }
-            //    ]
-            //  },
-            //  {
-            //    ""type"": ""SmartOven"",
-            //    ""oid"": ""smart_oven_cerknica_1"",
-            //    ""properties"": [
-            //      {
-            //        ""pid"": ""device_status"",
-            //        ""monitors"": ""device_status"",
-            //        ""output"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        },
-            //        ""writable"": false,
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ]
-            //      },
-            //      {
-            //        ""pid"": ""light"",
-            //        ""monitors"": ""light"",
-            //        ""output"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        },
-            //        ""writable"": false,
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/properties/{pid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ]
-            //      }
-            //    ],
-            //    ""actions"": [      
-            //      {
-            //        ""aid"": ""delayed_baking"",
-            //        ""affects"": ""delayed_baking_status"",
-            //        ""read_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/actions/{aid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""write_links"": [
-            //          {
-            //            ""href"": ""/objects/{oid}/actions/{aid}"",
-            //            ""mediaType"": ""application/json""
-            //          }
-            //        ],
-            //        ""input"": {
-            //          ""units"": ""Adimensional"",
-            //          ""datatype"": ""string""
-            //        }
-            //      }
-            //    ]
-            //  }
-            //]";
-            #endregion
-
-
             List<Appliance> appliances = new List<Appliance>();
             List<Property> ovenProperties = new List<Property>();
             List<Event> ovenEvents = new List<Event>();
@@ -177,255 +37,153 @@ namespace VicinityWCF
                 XmlNodeList xmlRefrigeratorEvents = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Events/Event");
                 foreach (XmlNode node in xmlOvenProperties)
                 {
-                    string pid = node.Attributes["pid"].Value;
-                    XmlNodeList xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pid + "']/Fields[@type='readOutput']/Field");
+                    string pID = node.Attributes["pid"].Value;
+                    XmlNodeList xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pID + "']/Fields[@type='readOutput']/Field");
                     List<Field> readOutputFields = new List<Field>();
                     foreach(XmlNode field in xmlOvenPropertiesFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value), field.Attributes["predicate"].Value));
                     }
-                    InOutput readOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = readOutputFields
-                    };
-                    xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pid + "']/Fields[@type='writeInput']/Field");
+                    InOutput readOutput = new InOutput("object", readOutputFields);
+                    xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pID + "']/Fields[@type='writeInput']/Field");
                     List<Field> writeInputFields = new List<Field>();
                     foreach (XmlNode field in xmlOvenPropertiesFields)
                     {
                         writeInputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeInput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeInputFields
-                    };
-                    xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pid + "']/Fields[@type='writeOutput']/Field");
+                    InOutput writeInput = new InOutput("object", writeInputFields);
+                    xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Properties/Property[@pid='" + pID + "']/Fields[@type='writeOutput']/Field");
                     List<Field> writeOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlOvenPropertiesFields)
                     {
                         writeOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeOutputFields
-                    };
+                    InOutput writeOutput = new InOutput("object", writeOutputFields);
                     ovenProperties.Add(new Property
-                    {
-                        Pid = pid,
-                        Monitors = node.Attributes["monitors"].Value,
-                        ReadLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/properties/{pid}",
-                            Output = readOutput
-                        },
-                        WriteLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/properties/{pid}",
-                            Input = writeInput,
-                            Output = writeOutput
-                        }
-                    });
+                    (
+                        pID,
+                        node.Attributes["monitors"].Value,
+                        new ReadWriteLink("/objects/{oid}/properties/{pid}", readOutput),
+                        new ReadWriteLink("/objects/{oid}/properties/{pid}", writeOutput, writeInput)
+                    ));
                 }
                 foreach (XmlNode node in xmlOvenActions)
                 {
-                    string aid = node.Attributes["aid"].Value;
-                    XmlNodeList xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aid + "']/Fields[@type='readOutput']/Field");
+                    string aID = node.Attributes["aid"].Value;
+                    XmlNodeList xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aID + "']/Fields[@type='readOutput']/Field");
                     List<Field> readOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlOvenActionssFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput readOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = readOutputFields
-                    };
-                    xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aid + "']/Fields[@type='writeInput']/Field");
+                    InOutput readOutput = new InOutput("object", readOutputFields);
+                    xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aID + "']/Fields[@type='writeInput']/Field");
                     List<Field> writeInputFields = new List<Field>();
                     foreach (XmlNode field in xmlOvenActionssFields)
                     {
                         writeInputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeInput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeInputFields
-                    };
-                    xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aid + "']/Fields[@type='writeOutput']/Field");
+                    InOutput writeInput = new InOutput("object", writeInputFields);
+                    xmlOvenActionssFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Actions/Action[@aid='" + aID + "']/Fields[@type='writeOutput']/Field");
                     List<Field> writeOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlOvenActionssFields)
                     {
                         writeOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeOutputFields
-                    };
+                    InOutput writeOutput = new InOutput("object", writeOutputFields);
                     ovenActions.Add(new Action
-                    {
-                        Aid = aid,
-                        Affects = node.Attributes["affects"].Value,
-                        ReadLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/actions/{pid}",
-                            Output = readOutput
-                        },
-                        WriteLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/actions/{pid}",
-                            Input = writeInput,
-                            Output = writeOutput
-                        }
-                    });
+                    (
+                        aID,
+                        node.Attributes["affects"].Value,
+                        new ReadWriteLink("/objects/{oid}/actions/{pid}", writeOutput, writeInput),
+                        new ReadWriteLink("/objects/{oid}/actions/{pid}", readOutput)
+                    ));
                 }
                 foreach (XmlNode node in xmlOvenEvents)
                 {
-                    string eid = node.Attributes["eid"].Value;
-                    XmlNodeList xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Events/Event[@eid='" + eid + "']/Fields[@type='readOutput']/Field");
+                    string eID = node.Attributes["eid"].Value;
+                    XmlNodeList xmlOvenEventsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='oven']/Events/Event[@eid='" + eID + "']/Fields[@type='readOutput']/Field");
                     List<Field> readOutputFields = new List<Field>();
-                    foreach (XmlNode field in xmlOvenPropertiesFields)
+                    foreach (XmlNode field in xmlOvenEventsFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    ovenEvents.Add(new Event
-                    {
-                        Eid = eid,
-                        Monitors = node.Attributes["monitors"].Value,
-                        Output = new InOutput
-                        {
-                            Type = "object",
-                            Field = readOutputFields
-                        }
-                    });
+                    ovenEvents.Add(new Event(eID, node.Attributes["monitors"].Value, new InOutput("object", readOutputFields)));
                 }
                 foreach (XmlNode node in xmlRefrigeratorProperties)
                 {
-                    string pid = node.Attributes["pid"].Value;
-                    XmlNodeList xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pid + "']/Fields[@type='readOutput']/Field");
+                    string pID = node.Attributes["pid"].Value;
+                    XmlNodeList xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pID + "']/Fields[@type='readOutput']/Field");
                     List<Field> readOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorPropertiesFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value), field.Attributes["predicate"].Value));
                     }
-                    InOutput readOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = readOutputFields
-                    };
-                    xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pid + "']/Fields[@type='writeInput']/Field");
+                    InOutput readOutput = new InOutput("object", readOutputFields);
+                    xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pID + "']/Fields[@type='writeInput']/Field");
                     List<Field> writeInputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorPropertiesFields)
                     {
                         writeInputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeInput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeInputFields
-                    };
-                    xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pid + "']/Fields[@type='writeOutput']/Field");
+                    InOutput writeInput = new InOutput("object", writeInputFields);
+                    xmlRefrigeratorPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Properties/Property[@pid='" + pID + "']/Fields[@type='writeOutput']/Field");
                     List<Field> writeOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorPropertiesFields)
                     {
                         writeOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeOutputFields
-                    };
+                    InOutput writeOutput = new InOutput("object", writeOutputFields);
                     refrigeratorProperties.Add(new Property
-                    {
-                        Pid = pid,
-                        Monitors = node.Attributes["monitors"].Value,
-                        ReadLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/properties/{pid}",
-                            Output = readOutput
-                        },
-                        WriteLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/properties/{pid}",
-                            Input = writeInput,
-                            Output = writeOutput
-                        }
-                    });
+                    (
+                        pID,
+                        node.Attributes["monitors"].Value,
+                        new ReadWriteLink("/objects/{oid}/properties/{pid}", readOutput),
+                        new ReadWriteLink("/objects/{oid}/properties/{pid}", writeOutput, writeInput)
+                    ));
                 }
                 foreach (XmlNode node in xmlRefrigeratorActions)
                 {
-                    string aid = node.Attributes["aid"].Value;
-                    XmlNodeList xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aid + "']/Fields[@type='readOutput']//Field");
+                    string aID = node.Attributes["aid"].Value;
+                    XmlNodeList xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aID + "']/Fields[@type='readOutput']//Field");
                     List<Field> readOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorActionsFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput readOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = readOutputFields
-                    };
-                    xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aid + "']/Fields[@type='writeInput']/Field");
+                    InOutput readOutput = new InOutput("object", readOutputFields);
+                    xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aID + "']/Fields[@type='writeInput']/Field");
                     List<Field> writeInputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorActionsFields)
                     {
                         writeInputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeInput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeInputFields
-                    };
-                    xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aid + "']/Fields[@type='writeOutput']/Field");
+                    InOutput writeInput = new InOutput("object", writeInputFields);
+                    xmlRefrigeratorActionsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Actions/Action[@aid='" + aID + "']/Fields[@type='writeOutput']/Field");
                     List<Field> writeOutputFields = new List<Field>();
                     foreach (XmlNode field in xmlRefrigeratorActionsFields)
                     {
                         writeOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    InOutput writeOutput = new InOutput
-                    {
-                        Type = "object",
-                        Field = writeOutputFields
-                    };
+                    InOutput writeOutput = new InOutput("object", writeOutputFields);
                     refrigeratorActions.Add(new Action
-                    {
-                        Aid = aid,
-                        Affects = node.Attributes["affects"].Value,
-                        ReadLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/actions/{pid}",
-                            Output = readOutput
-                        },
-                        WriteLink = new ReadWriteLink
-                        {
-                            Href = "/objects/{oid}/actions/{pid}",
-                            Input = writeInput,
-                            Output = writeOutput
-                        }
-                    });
+                    (
+                        aID,
+                        node.Attributes["affects"].Value,
+                        new ReadWriteLink("/objects/{oid}/actions/{pid}", writeOutput, writeInput),
+                        new ReadWriteLink("/objects/{oid}/actions/{pid}", readOutput)
+                    ));
                 }
                 foreach (XmlNode node in xmlRefrigeratorEvents)
                 {
-                    string eid = node.Attributes["eid"].Value;
-                    XmlNodeList xmlOvenPropertiesFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Events/Event[@eid='" + eid + "']/Fields[@type='readOutput']/Field");
+                    string eID = node.Attributes["eid"].Value;
+                    XmlNodeList xmlRefrigeratorEventsFields = xmldoc2.SelectNodes("/Appliances/Appliance[@type='refrigerator']/Events/Event[@eid='" + eID + "']/Fields[@type='readOutput']/Field");
                     List<Field> readOutputFields = new List<Field>();
-                    foreach (XmlNode field in xmlOvenPropertiesFields)
+                    foreach (XmlNode field in xmlRefrigeratorEventsFields)
                     {
                         readOutputFields.Add(new Field(field.Attributes["name"].Value, field.Attributes["description"].Value, new Schema(field.Attributes["schemaType"].Value)));
                     }
-                    refrigeratorEvents?.Add(new Event
-                    {
-                        Eid = eid,
-                        Monitors = node.Attributes["monitors"].Value,
-                        Output = new InOutput
-                        {
-                            Type = "object",
-                            Field = readOutputFields
-                        }
-                    });
+                    refrigeratorEvents?.Add(new Event(eID, node.Attributes["monitors"].Value, new InOutput("object", readOutputFields)));
                 }
             }
             catch
@@ -438,195 +196,100 @@ namespace VicinityWCF
                 XmlNodeList xmlAppliances = xmldoc.SelectNodes("/items/item");
                 foreach (XmlNode node in xmlAppliances)
                 {
-                    string type = node["type"].InnerText;
-                    if (type.Equals("oven"))
+                    string oid = node.Attributes["oid"].Value;
+
+                    XmlNodeList xmlAppliancesLocatedIn = xmldoc.SelectNodes("/items/item[@oid='" + oid + "']/Locations/Location");
+                    List<LocatedIn> locatedIn = new List<LocatedIn>();
+                    foreach (XmlNode location in xmlAppliancesLocatedIn)
                     {
-                        appliances.Add(new Appliance
-                        {
-                            Type = "adapters:SmartOven",
-                            Oid = node.Attributes["oid"].Value,
-                            Name = node.Attributes["name"].Value,
-                            Properties = ovenProperties,
-                            Actions = ovenActions,
-                            Events = ovenEvents
-                        });
+                        locatedIn?.Add(new LocatedIn(location.Attributes["location_type"].Value, location.Attributes["label"].Value, location.Attributes["location_id"]?.Value));
                     }
-                    else if (type.Equals("refrigerator"))
+
+                    XmlNodeList xmlAppliancesStaticValues = xmldoc.SelectNodes("/items/item[@oid='" + oid + "']/StaticValues/StaticValue");
+                    List<StaticValue> staticValues = new List<StaticValue>();
+                    foreach (XmlNode staticValue in xmlAppliancesStaticValues)
                     {
-                        appliances.Add(new Appliance
-                        {
-                            Type = "adapters:SmartRefrigerator",
-                            Oid = node.Attributes["oid"].Value,
-                            Name = node.Attributes["name"].Value,
-                            Properties = refrigeratorProperties,
-                            Actions = refrigeratorActions,
-                            Events = refrigeratorEvents
-                        });
+                        staticValues?.Add(new StaticValue(staticValue.Attributes["pid"]?.Value, staticValue.Attributes["type"]?.Value, staticValue.Attributes["value"]?.Value));
+                    }
+
+                    string type = node["type"].InnerText;
+                    if (type.CompareTo("oven") == 0)
+                    {
+                        List<Property> newOvenProperties = AddStaticValuesToProperties(ovenProperties, staticValues);
+
+                        appliances?.Add(new Appliance
+                        (
+                            "adapters:SmartOven",
+                            oid,
+                            node.Attributes["name"].Value,
+                            newOvenProperties,
+                            ovenActions,
+                            ovenEvents,
+                            locatedIn
+                        ));
+                    }
+                    else if (type.CompareTo("refrigerator") == 0)
+                    {
+                        List<Property> newRefrigeratorProperties = AddStaticValuesToProperties(refrigeratorProperties, staticValues);
+
+                        appliances?.Add(new Appliance
+                        (
+                            "adapters:SmartRefrigerator",
+                            oid,
+                            node.Attributes["name"].Value,
+                            newRefrigeratorProperties,
+                            refrigeratorActions,
+                            refrigeratorEvents,
+                            locatedIn
+                        ));
                     }
                 }
             }
             catch
             { }
 
-            Objects objects = new Objects
-            {
-                AdapterID = "adapter-gorenje",
-                //AdapterID = "dev-adapter-gorenje",
-                Appliances = appliances
-            };
+            //Objects objects = new Objects("dev-adapter-gorenje", appliances);
+            Objects objects = new Objects("adapter-gorenje", appliances);
 
             string response = JsonConvert.SerializeObject(objects, Newtonsoft.Json.Formatting.Indented);
 
-            #region oldResponse
-            //response = @"{
-            //             ""adapter-id"": ""adapter-gorenje"",
-            //""thing-descriptions"":
-            //[
-            //           {
-            //             ""type"": ""core:Device"",
-            //             ""oid"": ""smart_oven_cerknica_0"",
-            //             ""name"": ""Smart Oven Cerknica 0"",
-            //             ""properties"": [
-            //               {
-            //                 ""pid"": ""device_status"",
-            //                 ""monitors"": ""adapters:Motion"",                    
-            //                 ""read_link"": {
-            //                     ""href"": ""/objects/{oid}/properties/{pid}"",
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                 },
-            //                 ""write_link"":  {
-            //                     ""href"": ""/objects/{oid}/properties/{pid}"",
-            //                     ""input"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     },
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                 }
-            //               },
-            //               {
-            //                 ""pid"": ""light"",
-            //                 ""monitors"": ""adapters:Motion"",
-            //                 ""read_link"": {
-            //                     ""href"": ""/objects/{oid}/properties/{pid}"",
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                   },
-            //                 ""write_link"": {
-            //                     ""href"": ""/objects/{oid}/properties/{pid}"",
-            //                     ""input"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     },
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                   }
-            //               }
-            //             ],
-            //             ""actions"": [      
-            //               {
-            //                 ""aid"": ""delayed_baking"",
-            //                 ""affects"": ""adapters:Motion"",
-            //                 ""read_link"": {
-            //                     ""href"": ""/objects/{oid}/actions/{aid}"",
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                   },
-            //                 ""write_link"": {
-            //                     ""href"": ""/objects/{oid}/actions/{aid}"",
-            //                     ""input"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     },
-            //                     ""output"": {
-            //                         ""type"": ""object"",
-            //                         ""field"": [
-            //                             {
-            //                                 ""name"": ""status"",
-            //                                 ""schema"": {
-            //                                     ""type"": ""string""
-            //                                 }
-            //                             }                   
-            //                         ]
-            //                     }
-            //                   }
-            //               }
-            //             ],
-            //             ""events"": []
-            //           }
-            //         ]
-            // }";
-            #endregion
-
             return new MemoryStream(Encoding.UTF8.GetBytes(response));
         }
+        #endregion
 
+        #endregion
+
+        #region Private
+
+        #region AddStaticValuesToProperties
+        private List<Property> AddStaticValuesToProperties(List<Property> currentProperties, List<StaticValue> staticValues)
+        {
+            List<Property> newProperties = new List<Property>();
+            if (currentProperties != null && staticValues != null)
+            {
+                foreach (var property in currentProperties)
+                {
+                    if (property.ReadLink != null)
+                    {
+                        Property item = new Property(property.PID, property.Monitors, new ReadWriteLink(property.ReadLink.Href, property.ReadLink.Output, property.ReadLink.Input), property.WriteLink);
+                        foreach (var staticValue in staticValues)
+                        {
+                            if (!string.IsNullOrEmpty(staticValue.PID) && item.PID.CompareTo(staticValue.PID) == 0)
+                            {
+                                item.ReadLink.StaticValue = staticValue;
+                                break;
+                            }
+                        }
+                        newProperties.Add(item);
+                    }
+                }
+            }
+            return newProperties;
+        }
+        #endregion
+
+        #endregion
+
+        #endregion
     }
 }

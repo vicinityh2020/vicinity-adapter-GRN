@@ -23,13 +23,5 @@ namespace VicinityWCF
         public string value { get; set; }
     }
 
-    /*
-    [DataContract(Name = "root", Namespace = "")]
-    public class DC_Objects_Properties_PUT
-    {
-        [DataMember(Name = "value", IsRequired = true)]
-        public string value { get; set; }
-    }*/
-
     #endregion
 }

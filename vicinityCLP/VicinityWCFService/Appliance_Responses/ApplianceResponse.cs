@@ -86,11 +86,6 @@ namespace VicinityWCF
                 {
                     return new Refrigerator_Response() { OnRequestReceived = _on_request_received_handler, AUID = _AUID };
                 }
-                //if (object_id.ToLower().Equals("smart_oven_cerknica_0") || object_id.ToLower().Equals("smart_oven_cerknica_1"))
-                //{
-                //    // return new Refrigerator_Response() { OnRequestReceived = _on_request_received_handler };
-                //    return new Oven_Response() { OnRequestReceived = _on_request_received_handler };
-                //}
             }
             return null;
         }

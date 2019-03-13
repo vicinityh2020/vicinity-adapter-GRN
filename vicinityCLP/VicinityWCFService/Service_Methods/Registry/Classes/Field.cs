@@ -4,6 +4,7 @@ namespace VicinityWCF
 {
     public class Field
     {
+        #region Constructor
         public Field(string name, string description, Schema schema, string predicate = null)
         {
             Name = name;
@@ -11,26 +12,49 @@ namespace VicinityWCF
             Schema = schema;
             Predicate = predicate;
         }
+        #endregion
+
+        #region Properties
+
+        #region Public
+
+        #region Name
         [JsonProperty(PropertyName = "name")]
         public string Name { set; get; }
+        #endregion
+
+        #region Predicate
         [JsonProperty(PropertyName = "predicate")]
         public string Predicate { set; get; }
+        #endregion
+
+        #region Description
         [JsonProperty(PropertyName = "description")]
         public string Description { set; get; }
+        #endregion
+
+        #region Schema
         [JsonProperty(PropertyName = "schema")]
         public Schema Schema { set; get; }
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region Methods
+
+        #region Public
+
+        #region ShouldSerializePredicate
         public bool ShouldSerializePredicate()
         {
-            return (string.IsNullOrEmpty(Predicate)) ? false : true;
+            return !string.IsNullOrEmpty(Predicate);
         }
-    }
-    public class Schema
-    {
-        public Schema(string type)
-        {
-            Type = type;
-        }
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+        #endregion
+
+        #endregion
+
+        #endregion
     }
 }

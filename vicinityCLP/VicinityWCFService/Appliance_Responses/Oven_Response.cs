@@ -801,9 +801,4 @@ namespace VicinityWCF
             }
         }
     }
-    public class Result
-    {
-        public string parameterName { set; get; }
-        public string parameterValue { set; get; }
-    }
 }

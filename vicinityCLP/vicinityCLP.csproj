@@ -99,7 +99,7 @@
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Loger.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ProcessHandling.cs" />
     <Compile Include="RichTextBoxExtension.cs" />
     <Compile Include="ServiceWorker_New.cs" />
@@ -128,11 +128,15 @@
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Event.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Action.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Appliance.cs" />
+    <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Schema.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Field.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\InOutput.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Objects.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\Property.cs" />
     <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\ReadWriteLink.cs" />
+    <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\LocatedIn.cs" />
+    <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\StaticValueType.cs" />
+    <Compile Include="VicinityWCFService\Service_Methods\Registry\Classes\StaticValue.cs" />
     <Compile Include="VicinityWCFService\VicinityWCFService.svc.cs" />
     <Compile Include="VicinityWCFService\Appliance_Responses\ApplianceResponse.cs" />
     <Compile Include="VicinityWCFService\Appliance_Responses\Oven_Response.cs" />

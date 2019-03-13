@@ -16,36 +16,14 @@ namespace VicinityCLP
 {
     public class ServiceWorker
     {
-        private ServiceHost vicinity_wcf_host;
-        private List<Device> _devices;
-        private List<Thread> _eventThreads;
-        private List<string> _actions;
-
-        #region CLP variables
-
-        CLP_Connection clp_connection;
-
-        string clp_user;
-        string clp_pass;
-        LoginData clp_login_token;
-
-        DateTime clp_login_token_expire;
-
-        #endregion
-
-        
-        public Action<Exception> exception;
-
-        public ApplianceMethods app_methods;
-
-
+        #region Constructor
         public ServiceWorker()
         {
             clp_connection = new CLP_Connection();
             _devices = new List<Device>();
             _eventThreads = new List<Thread>();
             _actions = new List<string>() { "delayed_baking", "baking", "start", "stop" };
-            
+
             XmlDocument xmldoc = new XmlDocument();
             try
             {
@@ -73,11 +51,11 @@ namespace VicinityCLP
 
             clp_login_token = null;
             clp_login_token_expire = DateTime.Now;
-            
+
             exception = null;
 
             app_methods = new ApplianceMethods();
-            
+
             //events
             List<DeviceEvent> ovenEvents = new List<DeviceEvent>();
             List<DeviceEvent> refrigeratorEvents = new List<DeviceEvent>();
@@ -140,7 +118,7 @@ namespace VicinityCLP
             }
             catch
             { }
-            
+
             XmlDocument xmldoc3 = new XmlDocument();
             try
             {
@@ -162,7 +140,48 @@ namespace VicinityCLP
             catch
             { }
         }
+        #endregion
 
+        #region Properties
+
+        #region Private
+        private ServiceHost vicinity_wcf_host;
+        private List<Device> _devices;
+        private List<Thread> _eventThreads;
+        private List<string> _actions;
+
+        #region CLP variables
+
+        CLP_Connection clp_connection;
+
+        string clp_user;
+        string clp_pass;
+        LoginData clp_login_token;
+
+        DateTime clp_login_token_expire;
+
+        #endregion
+        #endregion
+
+        #region Public
+
+        #region Exception
+        public Action<Exception> exception;
+        #endregion
+
+        #region AppMethods
+        public ApplianceMethods app_methods;
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region Methods
+
+        #region Public
+
+        #region Start
         public void Start()
         {
             Task.Factory.StartNew(() =>
@@ -186,7 +205,9 @@ namespace VicinityCLP
             //events
             Events();
         }
+        #endregion
 
+        #region Stop
         public void Stop()
         {
             try
@@ -220,7 +241,13 @@ namespace VicinityCLP
             
             Logger.Log(LogMsgType.INFO, "Service and events stopped!", LogAuthor.Adapter);
         }
+        #endregion
 
+        #endregion
+
+        #region Private
+
+        #region CLPtokenToString
         private string CLPtokenToString()
         {
             if (clp_login_token == null || clp_login_token_expire < DateTime.Now)
@@ -235,513 +262,9 @@ namespace VicinityCLP
 
             return clp_login_token.token;
         }
+        #endregion
 
-        private void VicinityWCFService_OnRequestReceived(object sender, HTTPRequestEventArgs e)
-        {
-            if (e.clp_params_request)
-            {
-                string json_response = clp_connection.GetCLPObject(clp_user, CLPtokenToString(), e.AUID);
-
-                CLP_Parameters clp_parameters = new CLP_Parameters();
-                clp_parameters.Parse(json_response);
-                e.clp_params = clp_parameters.GetParams(e.AUID);
-                
-                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] requested parameters from CLP!", LogAuthor.Adapter);
-            }
-            else
-            {
-                switch (e.action_type)
-                {
-                    case RequestActionType.OVEN_DELAYED_BAKING:
-                        {
-                            if (e.clp_params.ContainsKey("duration") &&
-                                e.clp_params.ContainsKey("delay") &&
-                                e.clp_params.ContainsKey("temperature") &&
-                                e.clp_params.ContainsKey("heater_system"))
-                            {
-                                try
-                                {
-                                    int duration = Convert.ToInt32(e.clp_params["duration"]);
-                                    int delay = Convert.ToInt32(e.clp_params["delay"]);
-                                    int temperature = Convert.ToInt32(e.clp_params["temperature"]);
-                                    
-
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_POST_DelayedBaking(clp_connection, clp_user, CLPtokenToString(), e.AUID, duration, delay, temperature, e.clp_params["heater_system"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-
-                                    string logtext = "";
-                                    foreach (KeyValuePair<string, string> item in e.clp_params)
-                                    {
-                                        if (!String.IsNullOrEmpty(logtext))
-                                            logtext += "; ";
-
-                                        logtext += item.Key + " = " + item.Value;
-                                    }
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: delayed_baking -> " + logtext, LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_BAKING:
-                        {
-                            if (e.clp_params.ContainsKey("duration") &&
-                                e.clp_params.ContainsKey("temperature") &&
-                                e.clp_params.ContainsKey("heater_system"))
-                            {
-                                try
-                                {
-                                    int duration = Convert.ToInt32(e.clp_params["duration"]);
-                                    int temperature = Convert.ToInt32(e.clp_params["temperature"]);
-
-
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_POST_Baking(clp_connection, clp_user, CLPtokenToString(), e.AUID, duration, temperature, e.clp_params["heater_system"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-
-                                    string logtext = "";
-                                    foreach (KeyValuePair<string, string> item in e.clp_params)
-                                    {
-                                        if (!String.IsNullOrEmpty(logtext))
-                                            logtext += "; ";
-
-                                        logtext += item.Key + " = " + item.Value;
-                                    }
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking -> " + logtext, LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_LIGHT:
-                        {
-                            if (e.clp_params.ContainsKey("light"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_Light(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["light"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: light -> " + e.clp_params["light"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_CHILD_LOCK:
-                        {
-                            if (e.clp_params.ContainsKey("child_lock"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_ChildLock(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["child_lock"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: child lock -> " + e.clp_params["child_lock"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_BAKING_START:
-                        {
-                            try
-                            {
-                                Task.Factory.StartNew(() =>
-                                {
-                                    app_methods.Oven_POST_ActionStart(clp_connection, clp_user, CLPtokenToString(), e.AUID);
-                                });
-                                
-                                e.action_executed = true;
-                                
-                                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: start baking ", LogAuthor.Adapter);
-                            }
-                            catch (Exception ex)
-                            {
-                                exception?.Invoke(ex);
-
-                                e.action_executed = false;
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_BAKING_STOP:
-                        {
-                            try
-                            {
-                                Task.Factory.StartNew(() =>
-                                {
-                                app_methods.Oven_POST_ActionStop(clp_connection, clp_user, CLPtokenToString(), e.AUID);
-                                });
-
-
-                                e.action_executed = true;
-                                
-                                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: stop baking ", LogAuthor.Adapter);
-                            }
-                            catch (Exception ex)
-                            {
-                                exception?.Invoke(ex);
-
-                                e.action_executed = false;
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_HEATER_SYSTEM:
-                        {
-                            if (e.clp_params.ContainsKey("heater_system_sub"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_HeaterSystem(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["heater_system_sub"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: heater system -> " + e.clp_params["heater_system_sub"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_SET_MEAT_PROBE_TEMPERATURE:
-                        {
-                            if (e.clp_params.ContainsKey("set_meat_probe_temp"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_SetMeatProbeTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_meat_probe_temp"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set meat probe temp -> " + e.clp_params["set_meat_probe_temp"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_SET_BAKING_TEMPERATURE:
-                        {
-                            if (e.clp_params.ContainsKey("set_oven_temperature"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_SetBakingTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_oven_temperature"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set baking temp -> " + e.clp_params["set_oven_temperature"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_SET_BAKING_TIME:
-                        {
-                            if (e.clp_params.ContainsKey("set_bake_time_minutes"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_SetBakingTime(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_bake_time_minutes"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set baking time -> " + e.clp_params["set_bake_time_minutes"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_ALARM_TIME:
-                        {
-                            if (e.clp_params.ContainsKey("alarm_time_minutes"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_AlarmTime(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["alarm_time_minutes"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: alarm time -> " + e.clp_params["alarm_time_minutes"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_BAKING_START_TIME_HOUR:
-                        {
-                            if (e.clp_params.ContainsKey("baking_start_time_hour"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_BakingStartTimeHour(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["baking_start_time_hour"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking start time hour -> " + e.clp_params["baking_start_time_hour"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.OVEN_BAKING_START_TIME_MINUTE:
-                        {
-                            if (e.clp_params.ContainsKey("baking_start_time_minute"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Oven_PUT_BakingStartTimeMinute(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["baking_start_time_minute"]));
-                                    });
-
-
-                                    e.action_executed = true;
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking start time minute -> " + e.clp_params["baking_start_time_minute"].ToUpper(), LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-
-                    //refrigerator
-                    case RequestActionType.REFRIGERATOR_CHILD_LOCK:
-                        {
-                            if (e.clp_params.ContainsKey("child_lock"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Refrigerator_PUT_ChildLock(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["child_lock"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: child lock -> " + e.clp_params["child_lock"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.REFRIGERATOR_TEMPERATURE:
-                        {
-                            if (e.clp_params.ContainsKey("refrigerator_temperature"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Refrigerator_PUT_RefrigeratorTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["refrigerator_temperature"]));
-                                    });
-
-
-                                    e.action_executed = true;
-
-
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: refrigerator temperature -> " + e.clp_params["refrigerator_temperature"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.REFRIGERATOR_FREEZER_TEMPERATURE:
-                        {
-                            if (e.clp_params.ContainsKey("freezer_temperature"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Refrigerator_PUT_FreezerTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["freezer_temperature"]));
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: freezer temperature -> " + e.clp_params["freezer_temperature"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.REFRIGERATOR_FASTFREEZE:
-                        {
-                            if (e.clp_params.ContainsKey("fastfreeze"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Refrigerator_PUT_Fastfreeze(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["fastfreeze"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: fastfreeze -> " + e.clp_params["fastfreeze"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                    case RequestActionType.REFRIGERATOR_SUPERCOOL:
-                        {
-                            if (e.clp_params.ContainsKey("supercool"))
-                            {
-                                try
-                                {
-                                    Task.Factory.StartNew(() =>
-                                    {
-                                        app_methods.Refrigerator_PUT_Supercool(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["supercool"].ToUpper());
-                                    });
-
-
-                                    e.action_executed = true;
-
-                                    
-                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: supercool -> " + e.clp_params["supercool"], LogAuthor.Adapter);
-                                }
-                                catch (Exception ex)
-                                {
-                                    exception?.Invoke(ex);
-
-                                    e.action_executed = false;
-                                }
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
+        #region Events
         private void Events()
         {
             if (_devices != null)
@@ -768,6 +291,9 @@ namespace VicinityCLP
                 }
             }
         }
+        #endregion
+
+        #region EventCheck
         private void EventCheck(Device device)
         {
             while (true)
@@ -855,7 +381,9 @@ namespace VicinityCLP
                 }
             }
         }
+        #endregion
 
+        #region ChangeActionStatus
         private void ChangeActionStatus(string deviceID, string AUID, string newStatus = "finished")
         {
             try
@@ -880,7 +408,9 @@ namespace VicinityCLP
                 Logger.Log(LogMsgType.ERROR, "Device: " + deviceID + " " + e.ToString(), LogAuthor.Adapter);
             }
         }
+        #endregion
 
+        #region CreateJSON
         private string CreateJSON(string deviceID, string AUID, string parameter, string parValue)
         {
             DateTime utc = DateTime.UtcNow;
@@ -892,7 +422,9 @@ namespace VicinityCLP
 }";
             return json;
         }
+        #endregion
 
+        #region CreateRequest
         private RestRequest CreateRequest(string json, string deviceID, string status = null)
         {
             try
@@ -915,7 +447,9 @@ namespace VicinityCLP
                 return null;
             }
         }
+        #endregion
 
+        #region SetBakingStatus
         private void SetBakingStatus(List<DeviceEvent> events, CookingStatus status)
         {
             foreach(var evnt in events)
@@ -929,5 +463,522 @@ namespace VicinityCLP
                 }
             }
         }
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region EventHandlers
+
+        #region VicinityWCFService_OnRequestReceived
+        private void VicinityWCFService_OnRequestReceived(object sender, HTTPRequestEventArgs e)
+        {
+            if (e.clp_params_request)
+            {
+                string json_response = clp_connection.GetCLPObject(clp_user, CLPtokenToString(), e.AUID);
+
+                CLP_Parameters clp_parameters = new CLP_Parameters();
+                clp_parameters.Parse(json_response);
+                e.clp_params = clp_parameters.GetParams(e.AUID);
+
+                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] requested parameters from CLP!", LogAuthor.Adapter);
+            }
+            else
+            {
+                switch (e.action_type)
+                {
+                    case RequestActionType.OVEN_DELAYED_BAKING:
+                        {
+                            if (e.clp_params.ContainsKey("duration") &&
+                                e.clp_params.ContainsKey("delay") &&
+                                e.clp_params.ContainsKey("temperature") &&
+                                e.clp_params.ContainsKey("heater_system"))
+                            {
+                                try
+                                {
+                                    int duration = Convert.ToInt32(e.clp_params["duration"]);
+                                    int delay = Convert.ToInt32(e.clp_params["delay"]);
+                                    int temperature = Convert.ToInt32(e.clp_params["temperature"]);
+
+
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_POST_DelayedBaking(clp_connection, clp_user, CLPtokenToString(), e.AUID, duration, delay, temperature, e.clp_params["heater_system"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    string logtext = "";
+                                    foreach (KeyValuePair<string, string> item in e.clp_params)
+                                    {
+                                        if (!String.IsNullOrEmpty(logtext))
+                                            logtext += "; ";
+
+                                        logtext += item.Key + " = " + item.Value;
+                                    }
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: delayed_baking -> " + logtext, LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_BAKING:
+                        {
+                            if (e.clp_params.ContainsKey("duration") &&
+                                e.clp_params.ContainsKey("temperature") &&
+                                e.clp_params.ContainsKey("heater_system"))
+                            {
+                                try
+                                {
+                                    int duration = Convert.ToInt32(e.clp_params["duration"]);
+                                    int temperature = Convert.ToInt32(e.clp_params["temperature"]);
+
+
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_POST_Baking(clp_connection, clp_user, CLPtokenToString(), e.AUID, duration, temperature, e.clp_params["heater_system"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    string logtext = "";
+                                    foreach (KeyValuePair<string, string> item in e.clp_params)
+                                    {
+                                        if (!String.IsNullOrEmpty(logtext))
+                                            logtext += "; ";
+
+                                        logtext += item.Key + " = " + item.Value;
+                                    }
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking -> " + logtext, LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_LIGHT:
+                        {
+                            if (e.clp_params.ContainsKey("light"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_Light(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["light"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: light -> " + e.clp_params["light"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_CHILD_LOCK:
+                        {
+                            if (e.clp_params.ContainsKey("child_lock"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_ChildLock(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["child_lock"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: child lock -> " + e.clp_params["child_lock"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_BAKING_START:
+                        {
+                            try
+                            {
+                                Task.Factory.StartNew(() =>
+                                {
+                                    app_methods.Oven_POST_ActionStart(clp_connection, clp_user, CLPtokenToString(), e.AUID);
+                                });
+
+                                e.action_executed = true;
+
+                                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: start baking ", LogAuthor.Adapter);
+                            }
+                            catch (Exception ex)
+                            {
+                                exception?.Invoke(ex);
+
+                                e.action_executed = false;
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_BAKING_STOP:
+                        {
+                            try
+                            {
+                                Task.Factory.StartNew(() =>
+                                {
+                                    app_methods.Oven_POST_ActionStop(clp_connection, clp_user, CLPtokenToString(), e.AUID);
+                                });
+
+
+                                e.action_executed = true;
+
+                                Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: stop baking ", LogAuthor.Adapter);
+                            }
+                            catch (Exception ex)
+                            {
+                                exception?.Invoke(ex);
+
+                                e.action_executed = false;
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_HEATER_SYSTEM:
+                        {
+                            if (e.clp_params.ContainsKey("heater_system_sub"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_HeaterSystem(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["heater_system_sub"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: heater system -> " + e.clp_params["heater_system_sub"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_SET_MEAT_PROBE_TEMPERATURE:
+                        {
+                            if (e.clp_params.ContainsKey("set_meat_probe_temp"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_SetMeatProbeTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_meat_probe_temp"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set meat probe temp -> " + e.clp_params["set_meat_probe_temp"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_SET_BAKING_TEMPERATURE:
+                        {
+                            if (e.clp_params.ContainsKey("set_oven_temperature"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_SetBakingTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_oven_temperature"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set baking temp -> " + e.clp_params["set_oven_temperature"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_SET_BAKING_TIME:
+                        {
+                            if (e.clp_params.ContainsKey("set_bake_time_minutes"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_SetBakingTime(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["set_bake_time_minutes"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: set baking time -> " + e.clp_params["set_bake_time_minutes"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_ALARM_TIME:
+                        {
+                            if (e.clp_params.ContainsKey("alarm_time_minutes"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_AlarmTime(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["alarm_time_minutes"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: alarm time -> " + e.clp_params["alarm_time_minutes"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_BAKING_START_TIME_HOUR:
+                        {
+                            if (e.clp_params.ContainsKey("baking_start_time_hour"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_BakingStartTimeHour(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["baking_start_time_hour"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking start time hour -> " + e.clp_params["baking_start_time_hour"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.OVEN_BAKING_START_TIME_MINUTE:
+                        {
+                            if (e.clp_params.ContainsKey("baking_start_time_minute"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Oven_PUT_BakingStartTimeMinute(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["baking_start_time_minute"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: baking start time minute -> " + e.clp_params["baking_start_time_minute"].ToUpper(), LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+
+                    //refrigerator
+                    case RequestActionType.REFRIGERATOR_CHILD_LOCK:
+                        {
+                            if (e.clp_params.ContainsKey("child_lock"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Refrigerator_PUT_ChildLock(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["child_lock"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: child lock -> " + e.clp_params["child_lock"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.REFRIGERATOR_TEMPERATURE:
+                        {
+                            if (e.clp_params.ContainsKey("refrigerator_temperature"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Refrigerator_PUT_RefrigeratorTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["refrigerator_temperature"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: refrigerator temperature -> " + e.clp_params["refrigerator_temperature"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.REFRIGERATOR_FREEZER_TEMPERATURE:
+                        {
+                            if (e.clp_params.ContainsKey("freezer_temperature"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Refrigerator_PUT_FreezerTemp(clp_connection, clp_user, CLPtokenToString(), e.AUID, Int32.Parse(e.clp_params["freezer_temperature"]));
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: freezer temperature -> " + e.clp_params["freezer_temperature"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.REFRIGERATOR_FASTFREEZE:
+                        {
+                            if (e.clp_params.ContainsKey("fastfreeze"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Refrigerator_PUT_Fastfreeze(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["fastfreeze"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: fastfreeze -> " + e.clp_params["fastfreeze"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                    case RequestActionType.REFRIGERATOR_SUPERCOOL:
+                        {
+                            if (e.clp_params.ContainsKey("supercool"))
+                            {
+                                try
+                                {
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        app_methods.Refrigerator_PUT_Supercool(clp_connection, clp_user, CLPtokenToString(), e.AUID, e.clp_params["supercool"].ToUpper());
+                                    });
+
+
+                                    e.action_executed = true;
+
+
+                                    Logger.Log(LogMsgType.INFO, "[" + e.AUID + "] action: supercool -> " + e.clp_params["supercool"], LogAuthor.Adapter);
+                                }
+                                catch (Exception ex)
+                                {
+                                    exception?.Invoke(ex);
+
+                                    e.action_executed = false;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }
