@@ -21,10 +21,6 @@ namespace vicinityCLP.Events.Classes
 
         #region Public
 
-        #region CookingStatus
-        public CookingStatus CookingStatus { get; set; }
-        #endregion
-
         #region EmergencyStage
         public EmergencyStage EmergencyStage { get; set; }
         #endregion
@@ -59,6 +55,7 @@ namespace vicinityCLP.Events.Classes
     public enum CookingStatus
     {
         None,
+        Baking,
         BakingFinished
     }
     public class EmergencyLevel

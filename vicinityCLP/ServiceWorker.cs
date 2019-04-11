@@ -22,7 +22,7 @@ namespace VicinityCLP
             clp_connection = new CLP_Connection();
             _devices = new List<Device>();
             _eventThreads = new List<Thread>();
-            _actions = new List<string>() { "delayed_baking", "baking", "start", "stop" };
+            _actions = new List<string>() { "delayed_baking", "baking", "stop" };
 
             XmlDocument xmldoc = new XmlDocument();
             try
@@ -129,11 +129,11 @@ namespace VicinityCLP
                     string type = appliance["type"].InnerText;
                     if (type.Equals("oven"))
                     {
-                        _devices?.Add(new Device(appliance["clp"].InnerText, appliance.Attributes["oid"].Value, ovenEvents, DeviceType.oven));
+                        _devices?.Add(new Device(appliance["clp"].InnerText, appliance.Attributes["oid"].Value, CopyEvents(ovenEvents), DeviceType.oven));
                     }
                     else if (type.Equals("refrigerator"))
                     {
-                        _devices?.Add(new Device(appliance["clp"].InnerText, appliance.Attributes["oid"].Value, refrigeratorEvents, DeviceType.refrigerator));
+                        _devices?.Add(new Device(appliance["clp"].InnerText, appliance.Attributes["oid"].Value, CopyEvents(refrigeratorEvents), DeviceType.refrigerator));
                     }
                 }
             }
@@ -296,6 +296,7 @@ namespace VicinityCLP
         #region EventCheck
         private void EventCheck(Device device)
         {
+            CookingStatus cookingStatus = CookingStatus.None;
             while (true)
             {
                 try
@@ -319,35 +320,32 @@ namespace VicinityCLP
                                     //publish event
                                     device.Properties[item.CLPID] = props[item.CLPID];
                                     string value = props[item.CLPID].ToUpper();
-                                    var client = new RestClient("http://localhost:9997/agent/events/" + item.EID);
-                                    string json = CreateJSON(device.OID, device.AUID, item.EID, value);
-                                    var request = CreateRequest(json, device.OID);
 
-                                    IRestResponse response = client.Execute(request);
+                                    PublishEvent(item.EID, device.OID, device.AUID, item.CLPID, value);
 
-                                    string message = "Device: " + device.OID + " property: " + item.CLPID + " has changed to: " + value + Environment.NewLine + response.Content;
-                                    Logger.Log(LogMsgType.INFO, message, LogAuthor.Event);
-
-                                    if(item.EID.Equals("device_status") && (value.ToUpper().Equals("IDLE")))
+                                    if(item.EID.Equals("device_status") && (value.Equals("IDLE")))
                                     {
-                                        SetBakingStatus(device.Events, CookingStatus.None);
+                                        cookingStatus = CookingStatus.None;
                                         ChangeActionStatus(device.OID, device.AUID);
                                     }
                                     else if ((item.EID.Equals("refrigerator_door") || item.EID.Equals("freezer_door") || item.EID.Equals("door")) && 
-                                              value.ToUpper().Equals("OPENED"))
+                                              value.Equals("OPENED"))
                                     {
                                         item.LastChanged = DateTime.Now;
                                         item.EmergencyStage = EmergencyStage.None;
-                                        item.CookingStatus = CookingStatus.None;
+                                        if(cookingStatus == CookingStatus.BakingFinished)
+                                        {
+                                            cookingStatus = CookingStatus.None;
+                                        }
                                     }
-                                    else if (item.EID.Equals("device_status") && value.ToUpper().Equals("AFTER_BAKE"))
+                                    else if (item.EID.Equals("device_status") && (value.Equals("RUNNING")))
                                     {
-                                        SetBakingStatus(device.Events, CookingStatus.BakingFinished);
+                                        cookingStatus = CookingStatus.Baking;
                                     }
                                 }
                                 else if (item.EmergencyLevel != null && item.LastChanged.Year >= 2018 && item.EmergencyStage != EmergencyStage.Three && 
                                        ((device.DeviceType == DeviceType.refrigerator && device.Properties[item.CLPID].ToUpper().Equals("OPENED")) || 
-                                        (device.DeviceType == DeviceType.oven && device.Properties[item.CLPID].ToUpper().Equals("CLOSED") && item.CookingStatus == CookingStatus.BakingFinished)))
+                                        (device.DeviceType == DeviceType.oven && device.Properties[item.CLPID].ToUpper().Equals("CLOSED") && cookingStatus == CookingStatus.BakingFinished)))
                                 {
                                     DateTime now = DateTime.Now;
                                     foreach (var level in item.EmergencyLevel)
@@ -356,19 +354,47 @@ namespace VicinityCLP
                                         if ((now-item.LastChanged).TotalMinutes >= level.Min && index == (int)item.EmergencyStage)
                                         {
                                             int lvl = (int)level.Stage;
-                                            string eventID = device.DeviceType.ToString() + "_emergency";
-                                            var client = new RestClient("http://localhost:9997/agent/events/" + eventID);
-                                            string json = CreateJSON(device.OID, device.AUID, eventID, lvl.ToString());
-                                            var request = CreateRequest(json, device.OID);
+                                            string eventID = null;
+                                            if (device.DeviceType == DeviceType.oven)
+                                            {
+                                                eventID = "oven_emergency";
+                                            }
+                                            else
+                                            {
+                                                if (item.EID.Contains("refrigerator"))
+                                                {
+                                                    eventID = "refrigerator_emergency";
+                                                }
+                                                else
+                                                {
+                                                    eventID = "freezer_emergency";
+                                                }
+                                            }
 
-                                            IRestResponse response = client.Execute(request);
+                                            PublishEvent(eventID, device.OID, device.AUID, eventID, lvl.ToString());
 
-                                            string message = "Device: " + device.OID + " Emergency Level: " + lvl + Environment.NewLine + response.Content;
-                                            Logger.Log(LogMsgType.INFO, message, LogAuthor.Event);
                                             item.EmergencyStage = (EmergencyStage)(index + 1);
                                             break;
                                         }
                                     }
+                                }
+                                else if (cookingStatus == CookingStatus.Baking &&
+                                         item.EID.Equals("device_status") && device.Properties[item.CLPID].ToUpper().Equals("RUNNING") && 
+                                         props["BAKE_REMAINING_TIME_MINUTES"].Equals("0") && props["BAKE_REMAINING_TIME_SECONDS"].Equals("0"))
+                                {
+                                    cookingStatus = CookingStatus.BakingFinished;
+
+                                    foreach (var evnt in device.Events)
+                                    {
+                                        if (evnt.EID.Equals("door"))
+                                        {
+                                            evnt.LastChanged = DateTime.Now;
+                                            evnt.EmergencyStage = EmergencyStage.None;
+                                            break;
+                                        }
+                                    }
+
+                                    PublishEvent(item.EID, device.OID, device.AUID, item.CLPID, "AFTER_BAKE");
                                 }
                             }
                         }
@@ -449,19 +475,32 @@ namespace VicinityCLP
         }
         #endregion
 
-        #region SetBakingStatus
-        private void SetBakingStatus(List<DeviceEvent> events, CookingStatus status)
+        #region CopyEvents
+        private List<DeviceEvent> CopyEvents(List<DeviceEvent> events)
         {
-            foreach(var evnt in events)
+            List<DeviceEvent> newList = new List<DeviceEvent>();
+            if(events != null)
             {
-                if (evnt.EID.ToUpper().Equals("DOOR"))
+                foreach(var item in events)
                 {
-                    evnt.LastChanged = DateTime.Now;
-                    evnt.EmergencyStage = EmergencyStage.None;
-                    evnt.CookingStatus = status;
-                    break;
+                    newList?.Add(new DeviceEvent(item.CLPID, item.EID, item.EmergencyLevel));
                 }
             }
+            return newList;
+        }
+        #endregion
+
+        #region PublishEvent
+        private void PublishEvent(string eventID, string deviceID, string deviceAUID, string clpID, string value)
+        {
+            var client = new RestClient("http://localhost:9997/agent/events/" + eventID);
+            string json = CreateJSON(deviceID, deviceAUID, eventID, value);
+            var request = CreateRequest(json, deviceID);
+
+            IRestResponse response = client.Execute(request);
+
+            string message = "Device: " + deviceID + " property: " + clpID + " has changed to: " + value + Environment.NewLine + response.Content;
+            Logger.Log(LogMsgType.INFO, message, LogAuthor.Event);
         }
         #endregion
 

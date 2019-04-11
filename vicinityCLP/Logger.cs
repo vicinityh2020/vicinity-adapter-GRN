@@ -16,7 +16,14 @@ namespace vicinityCLP
 
         #region Private
         private static string _logFolder = @"C:\VICINITY\Logs\";
-        private static string _fileName = DateTime.Today.ToString("yyyy-MM-dd") + ".log";
+
+        private static string _fileName
+        {
+            get
+            {
+                return DateTime.Today.ToString("yyyy-MM-dd") + ".log";
+            }
+        }
 
         private static string _pathEvents
         {
@@ -108,7 +115,7 @@ namespace vicinityCLP
                             {
                                 Directory.CreateDirectory(_pathEvents);
                             }
-                            File.AppendAllText(Path.Combine(_pathEvents, _fileName), Environment.NewLine + content);
+                            File.AppendAllText(Path.Combine(_pathEvents, _fileName), Environment.NewLine + Environment.NewLine + content);
                             break;
                         }
                     case LogAuthor.Adapter:
