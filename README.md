@@ -374,18 +374,7 @@ After executing PUT method we receive following response:
 #### Delayed baking
 
 AID: delayed_baking  
-Delayed baking action has GET method that returns information’s about delayed baking (if delay baking status is IDLE or RUNNING it will return default values for other parameters otherwise it will return set values) and POST method that set delayed baking parameters and automatically starts baking.
-
-**GET method**  
-After executing GET method we receive following response:  
-{  
-    "delayed_baking": "IDLE",  
-    "start_baking_at": "0:00",  
-    "duration": 0,  
-    "delay": 0,  
-    "temperature": 30,  
-    "heater_system": "hotair"  
-}
+Delayed baking action has only POST method that set delayed baking parameters and automatically starts baking.
 
 **POST method**  
 For POST method request we need to add following JSON:  
@@ -411,15 +400,7 @@ After executing POST method we receive following response:
 #### Baking
 
 AID: baking  
-Baking action has GET method that returns information’s about baking (duration in minutes, temperature in Celsius and selected heater system) and POST method that set baking parameters and automatically starts baking.
-
-**GET method**  
-After executing GET method we receive following response:  
-{  
-    "duration": 15,  
-    "temperature": 200,  
-    "heater_system": "ECOHOTAIR"  
-}
+Baking action has only POST method that set baking parameters and automatically starts baking.
 
 **POST method**  
 For POST method request we need to add following JSON:  
@@ -744,4 +725,20 @@ Properties explanation:
 Name: Unique name in NM  
 AUID: Unique appliance identifier number (37 digits)  
 refrigerator_emergency: possible values: "1" (10 minutes), "2" (5 minutes) or "3" (3 minutes)  
+Timestamp: UTC value when event happened  
+
+
+#### Freezer emergency
+You can subscribe to freezer emergency event to receive notification when the freezer door has been left open for 3 (Level 3), 5 (Level 2) or 10 (Level 1)  minutes. Event ID for freezer emergency is: freezer_emergency. For example subscriber receive following JSON:  
+{  
+	"Name": "Smart refrigerator 2",  
+	"AUID": "0000000000001321320001201800000000018",  
+    "freezer_emergency": "1",  
+    "Timestamp": "28. 10. 2018 10:09:11"  
+}  
+  
+Properties explanation:  
+Name: Unique name in NM  
+AUID: Unique appliance identifier number (37 digits)  
+freezer_emergency: possible values: "1" (10 minutes), "2" (5 minutes) or "3" (3 minutes)  
 Timestamp: UTC value when event happened  
